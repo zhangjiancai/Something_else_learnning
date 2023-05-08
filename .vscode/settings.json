@@ -1,8 +1,0 @@
-{
-    "python.analysis.typeCheckingMode": "basic",
-    "files.autoSave": "onFocusChange",
-    "jupyter.disableJupyterAutoStart": true,
-    "jupyter.exportWithOutputEnabled": true,
-    "jupyter.generateSVGPlots": true,
-    "jupyter.themeMatplotlibPlots": true
-}
