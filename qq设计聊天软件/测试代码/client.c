@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "client.h"
-
+const gchar *username; // 全局变量声明
 void closeApp(GtkWidget *window,gpointer data)
 {
     int sendmsg_len=write(socketcon,"quit",strlen("quit"));
@@ -31,7 +31,15 @@ void Put_Local_message(const gchar *text)
 {
         GtkTextIter start,end;
         gtk_text_buffer_get_bounds(GTK_TEXT_BUFFER(Rcv_buffer),&start,&end);/*获得缓冲区开始和结束位置的Iter*/
-    gtk_text_buffer_insert(GTK_TEXT_BUFFER(Rcv_buffer),&end,"使用者:\n",10);/*插入文本到缓冲区*/
+    // 构建要插入的字符串
+//char* text = g_strdup_printf("username:%s\n", argv[1]);
+
+// 插入文本到缓冲区
+//gtk_text_buffer_insert(GTK_TEXT_BUFFER(Rcv_buffer), &end, text, -1);
+
+// 释放字符串内存
+//g_free(text);
+    //gtk_text_buffer_insert(GTK_TEXT_BUFFER(Rcv_buffer),&end,"username:\n",10);/*插入文本到缓冲区*/
         gtk_text_buffer_insert(GTK_TEXT_BUFFER(Rcv_buffer),&end,text,strlen(text));/*插入文本到缓冲区*/
         gtk_text_buffer_insert(GTK_TEXT_BUFFER(Rcv_buffer),&end,"\n",1);/*插入文本到缓冲区*/
     int sendmsg_len=write(socketcon,text,strlen(text));
@@ -68,8 +76,10 @@ void on_send(GtkButton *SaveButton, GtkWidget *Send_textview)/*保存按钮的�
     if(strcmp(R_text,"")!=0)
     {
         //Get_Local_message();
-        Clear_Local_message();
-        Put_Local_message(R_text);   
+        Clear_Local_message();        
+        Put_Local_message(username); 
+        Put_Local_message(R_text);
+  
     }
     else
     {
@@ -101,6 +111,15 @@ void on_close(GtkButton *CloseButton,GtkWidget *Send_textview)
 /*主函数-----------------------------------------------------------------------*/
 int main(int argc, char *argv[])
 {
+
+
+    if (argc < 2) {
+        g_print("Usage: %s <username>\n", argv[0]);
+        return 1;
+    }
+ username = argv[1];
+
+
 /*主函数变量声明区*/
     GtkWidget *window/*定义主窗口*/,
           *Send_scrolled_win/*定义发送滚动窗口*/,
@@ -212,16 +231,18 @@ int main(int argc, char *argv[])
 
     /*------------------------------设置发送窗口滚动条-------------------------------*/
     Send_scrolled_win = gtk_scrolled_window_new(NULL,NULL);/*生成滚动条的窗口*/
-    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(Send_scrolled_win),Send_textview);
+    gtk_container_add(GTK_CONTAINER(Send_scrolled_win), Send_textview);
+    //gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(Send_scrolled_win),Send_textview);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(Send_scrolled_win),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);/*滚动条属性*/
 
     /*------------------------------设置接收窗口滚动条-------------------------------*/
     Rcv_scrolled_win = gtk_scrolled_window_new(NULL,NULL);/*生成滚动条的窗口*/
-    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(Rcv_scrolled_win),Rcv_textview);
+    gtk_container_add(GTK_CONTAINER(Rcv_scrolled_win), Rcv_textview);
+    //gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(Rcv_scrolled_win),Rcv_textview);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(Rcv_scrolled_win),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);/*滚动条属性*/
 
     /*------------------------------设置垂直盒子------------------------------*/
-    vbox = gtk_vbox_new(FALSE,0);/*生成一个垂直排布的盒子*/
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);/*生成一个垂直排布的盒子*/
 
     /*------------------------------设置发送按钮------------------------------*/
     SendButton = gtk_button_new_with_label("发送");/*生成发送按钮*/
@@ -232,13 +253,13 @@ int main(int argc, char *argv[])
     g_signal_connect(G_OBJECT(CloseButton),"clicked",G_CALLBACK(on_close),(gpointer)Send_textview);
 
     /*------------------------------设置按钮盒子------------------------------*/    
-    Button_Box = gtk_hbutton_box_new();/*生成按钮盒*/
+    Button_Box = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);/*生成按钮盒*/
     gtk_box_set_spacing(GTK_BOX(Button_Box),1);/*按钮之间的间隔*/
     gtk_button_box_set_layout(GTK_BUTTON_BOX(Button_Box),GTK_BUTTONBOX_END);/*按钮盒内部布局，风格是尾对齐*/
     gtk_container_set_border_width(GTK_CONTAINER(Button_Box),5);/*边框宽*/
 
     /*------------------------------设置分割线--------------------------------*/
-    hseparator = gtk_hseparator_new();
+    hseparator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
 
     /*------------------------------添加到容器--------------------------------*/
     gtk_container_add(GTK_CONTAINER(vbox),Rcv_scrolled_win);/*包装滚动条窗口到主窗口*/

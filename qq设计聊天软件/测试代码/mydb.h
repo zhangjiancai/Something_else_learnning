@@ -91,7 +91,7 @@ void mydb_init()
   
 }
 
-int mydb_insert(MYSQL *mysql,void *user,void *password)
+int mydb_insert(MYSQL *mysql,const char *user,const char *password)
 {
   int ret=0;
   /*
@@ -120,7 +120,7 @@ int mydb_insert(MYSQL *mysql,void *user,void *password)
   return 1;
 }
 
-int mydb_update(MYSQL *mysql,void *user,void *password)
+int mydb_update(MYSQL *mysql,const char *user,const char *password)
 {
   int ret=0;
 
@@ -145,7 +145,7 @@ int mydb_update(MYSQL *mysql,void *user,void *password)
   return 1;
 }
 
-int mydb_search(MYSQL *mysql,void *data)
+int mydb_search(MYSQL *mysql,const char *data)
 {
    MYSQL_RES *res_ptr;
    MYSQL_ROW sqlrow;

@@ -31,7 +31,7 @@ void on_button_clicked (GtkWidget* button,int data)
         {
             exit(-1);
         }
-        mydb_destory(mysql);
+        //mydb_destory(mysql);
         }
         else
         {
@@ -104,7 +104,7 @@ int main(int argc,char* argv[])
 
         button = gtk_button_new_with_label("确认");  
         g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(on_button_clicked),(gpointer)2);  
-        g_signal_connect_swapped(G_OBJECT(button),"clicked",G_CALLBACK(gtk_widget_destroy),window);  
+        //g_signal_connect_swapped(G_OBJECT(button),"clicked",G_CALLBACK(gtk_widget_destroy),window);  
         gtk_box_pack_start(GTK_BOX(box3),button,TRUE,TRUE,5);  
         gtk_widget_show(button);  
 
