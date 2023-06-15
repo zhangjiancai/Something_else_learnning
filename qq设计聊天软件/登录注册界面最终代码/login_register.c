@@ -1,12 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 #include "login_register.h"
 
-static GtkWidget* entry1;
-static GtkWidget* entry2;
-static LoginCallback login_callback_function;
-static RegisterCallback register_callback_function;
+ GtkWidget* entry1;
+ GtkWidget* entry2;
+ LoginCallback login_callback_function;
+ //RegisterCallback register_callback_function;
 
 void on_button_clicked(GtkWidget* button, gpointer data)
 {

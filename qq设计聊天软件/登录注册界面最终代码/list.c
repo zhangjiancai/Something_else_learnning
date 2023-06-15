@@ -1,9 +1,4 @@
 #include "login_register.h"
-#include <json-c/json.h>
-#include <stdio.h>   // 包含标准输入输出函数的头文件
-#include <string.h>  // 包含字符串处理函数的头文件
-#include <unistd.h>  // 包含系统调用函数的头文件
-#include <sys/socket.h>  // 包含套接字函数的头文件
 
 GtkWidget *window;
 GtkWidget *listbox;
