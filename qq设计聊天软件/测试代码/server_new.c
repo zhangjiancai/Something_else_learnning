@@ -138,14 +138,45 @@ void *fun_thrreceivehandler(void *socketcon) {
             memset(usernames, '\0', sizeof(usernames));
         }
         buffer[buffer_length] = '\0';
+            char* client_name = (char*)malloc(100 * sizeof(char));
+if (client_name == NULL) {
+    fprintf(stderr, "内存分配失败\n");
+    exit(1);  // 根据需要进行错误处理
+}
+        //send_username(buffer);
+        int i=0;
+            for(i=1;i<=arr;i++)
+        {
+        if(arrconsocket[i].socketcon!=socketcon1)
+        {
 
-        send_username(buffer);
+            sprintf(client_name,"%s--%d--->%s",arrconsocket[i].ipaddr,arrconsocket[i].port,buffer);
+if (write_to_file(client_name) == 0) {
+                    exit(-1);
+                }
+
+            int sendmsg_len=write(arrconsocket[i].socketcon,client_name,sizeof(client_name));
+                if(sendmsg_len>0)
+                {
+                    printf("向客户端%s:%d发送成功\n",arrconsocket[i].ipaddr,arrconsocket[i].port);
+                }
+                else
+                {
+                    printf("向客户端%s:%d发送失败\n",arrconsocket[i].ipaddr,arrconsocket[i].port);
+                }
+                
+        }
+        
+        }
+       // free(client_name);  // 释放内存
+        sleep(1);
     }
 }
 
-void *send_username(void *buffer) {
+//void *send_username(void *buffer) {
     // Function implementation
-}
+    
+//}
 
 void *fun_thraccepthander(void *socketlisten) {
     char buf[MAXLEN];

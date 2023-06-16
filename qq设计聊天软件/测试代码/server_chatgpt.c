@@ -17,6 +17,7 @@
 
 const int port = 8888;
 const char *ip = "127.0.0.1";
+char *buffer = NULL;
 
 void *send_username(void *buffer);
 
@@ -100,13 +101,12 @@ void send_usernames(int client_socket, const char** usernames, int num_users) {
 
 void *fun_thrreceivehandler(void *socketcon) {
     int buffer_length;
-    char buffer[MAXLEN];
     int socketcon1;
 
     socketcon1 = *((int *)socketcon);
     while (1) {
         memset(buffer, '\0', sizeof(buffer));
-        buffer_length = read(socketcon1, buffer, MAXLEN - 1);
+        buffer_length = read(socketcon1, buffer, sizeof(buffer) - 1);
         if (buffer_length < 0) {
             if (write_to_file("read from client error") == 0) {
                 exit(-1);

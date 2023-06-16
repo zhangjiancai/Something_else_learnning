@@ -15,10 +15,10 @@
 #define MAXTHR 10
 #define MAX_USERNAME_LENGTH 1024
 
-const int port = 8888;
+const int port = 8000;
 const char *ip = "127.0.0.1";
 
-void *send_username(void *buffer);
+//void *send_username(void *buffer);
 
 typedef struct mysocketinfo {
     int socketcon;
@@ -104,9 +104,13 @@ void *fun_thrreceivehandler(void *socketcon) {
     int socketcon1;
 
     socketcon1 = *((int *)socketcon);
+
     while (1) {
+        printf("server_socket_con:%d\n",socketcon1);
         memset(buffer, '\0', sizeof(buffer));
         buffer_length = read(socketcon1, buffer, MAXLEN - 1);
+        printf("buffer_length=%d\n",buffer_length);
+        printf("buffer:%s\n",buffer);
         if (buffer_length < 0) {
             if (write_to_file("read from client error") == 0) {
                 exit(-1);
@@ -135,17 +139,50 @@ void *fun_thrreceivehandler(void *socketcon) {
 
             send_usernames(socketcon1, (const char**)usernames, arr);
 
-            memset(usernames, '\0', sizeof(usernames));
+           free(usernames);
+          // memset(usernames, '\0', sizeof(usernames));
         }
-        buffer[buffer_length] = '\0';
+        //buffer[buffer_length] = '\0';
+            char* client_name = (char*)malloc(8 * sizeof(char));
+if (client_name == NULL) {
+    fprintf(stderr, "内存分配失败\n");
+    exit(1);  // 根据需要进行错误处理
+}
+        //send_username(buffer);
+        int i=0;
+            for(i=1;i<=arr;i++)
+        {
+        if(arrconsocket[i].socketcon!=socketcon1&&arrconsocket[i].username!=NULL)
+        {
 
-        send_username(buffer);
-    }
+            sprintf(client_name,"%s",buffer);
+if (write_to_file(client_name) == 0) {
+                    exit(-1);
+                }
+			size_t client_name_len = strlen(client_name);
+            int sendmsg_len=write(arrconsocket[i].socketcon,client_name,client_name_len);
+                if(sendmsg_len>0)
+                {
+                    printf("向客户端%s:%d发送成功 %s\n sendmsg_len %d",arrconsocket[i].ipaddr,arrconsocket[i].port,client_name,sendmsg_len);
+                }
+                else
+                {
+                    printf("向客户端%s:%d发送失败\n",arrconsocket[i].ipaddr,arrconsocket[i].port);
+                }
+                
+        }
+        
+        }
+        
+        free(client_name);  // 释放内存
+        sleep(1);
+    }//while
 }
 
-void *send_username(void *buffer) {
+//void *send_username(void *buffer) {
     // Function implementation
-}
+    
+//}
 
 void *fun_thraccepthander(void *socketlisten) {
     char buf[MAXLEN];
